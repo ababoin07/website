@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LE wiki de programmation des échecs</title>
+    <meta charset="UTF-8">
+    <link href="index.css" rel="stylesheet" type="text/css"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-template-rows: repeat(8, 50px);
+            width: 400px;
+            margin: 20px auto;
+            border: 2px solid #333;
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+        .black {
+            background-color: #769656;
+        }
+        .white {
+            background-color: #eeeed2;
+        }
+        .highlight {
+            outline: 3px solid red;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #history {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class='title'>LE wiki de programmation des échecs</h1>
+    <h4 class='sstitle'><a href="regles.html">Règles du jeu d'échecs</a></h4>
+    <h4 class='sstitle'><a href="algorithms.html">Algorithmes Principaux</a></h4>
+    <img src="game1.gif" alt="Kasparov vs Karpov" style="width: 25%;">
+
+    <h2>Jouez aux échecs !</h2>
+    <div id="board"></div>
+    <p id="status">C'est au tour de Blanc</p>
+    <div id="history">
+        <h3>Historique des mouvements</h3>
+        <ul id="moves-list"></ul>
+    </div>
+
+    <script>
+        // Configuration initiale
+        const boardElement = document.getElementById('board');
+        const statusElement = document.getElementById('status');
+        const historyElement = document.getElementById('moves-list');
+        const pieces = [
+            '♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜',
+            '♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟',
+            '', '', '', '', '', '', '', '',
+            '', '', '', '', '', '', '', '',
+            '', '', '', '', '', '', '', '',
+            '', '', '', '', '', '', '', '',
+            '♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙',
+            '♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'
+        ];
+        let turn = 'white';
+        let selectedSquare = null;
+        let history = [];
+
+        // Génération de l'échiquier
+        function createBoard() {
+            boardElement.innerHTML = '';
+            for (let i = 0; i < 64; i++) {
+                const square = document.createElement('div');
+                square.className = 'square ' + ((Math.floor(i / 8) + i) % 2 === 0 ? 'white' : 'black');
+                square.dataset.index = i;
+                square.textContent = pieces[i];
+                square.addEventListener('click', onSquareClick);
+                boardElement.appendChild(square);
+            }
+        }
+
+        // Gestion des clics sur les cases
+        function onSquareClick(e) {
+            const index = parseInt(e.target.dataset.index);
+            const piece = pieces[index];
+
+            if (selectedSquare === null) {
+                // Sélection d'une pièce
+                if ((turn === 'white' && piece.match(/♙|♖|♘|♗|♕|♔/)) ||
+                    (turn === 'black' && piece.match(/♟|♜|♞|♝|♛|♚/))) {
+                    selectedSquare = index;
+                    e.target.classList.add('highlight');
+                }
+            } else {
+                // Déplacement de la pièce
+                const move = { from: selectedSquare, to: index, piece: pieces[selectedSquare] };
+                pieces[index] = pieces[selectedSquare];
+                pieces[selectedSquare] = '';
+                selectedSquare = null;
+
+                // Ajout du mouvement à l'historique
+                history.push(move);
+                updateHistory();
+
+                // Mise à jour du tour
+                turn = turn === 'white' ? 'black' : 'white';
+                statusElement.textContent = `C'est au tour de ${turn === 'white' ? 'Blanc' : 'Noir'}`;
+
+                createBoard(); // Rafraîchir l'échiquier
+            }
+        }
+
+        // Mise à jour de l'historique des mouvements
+        function updateHistory() {
+            historyElement.innerHTML = '';
+            history.forEach((move, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Coup ${index + 1}: ${move.piece} de ${convertIndexToSquare(move.from)} à ${convertIndexToSquare(move.to)}`;
+                historyElement.appendChild(listItem);
+            });
+        }
+
+        // Conversion d'un index en notation d'échiquier (ex : 0 -> a8)
+        function convertIndexToSquare(index) {
+            const file = 'abcdefgh'[index % 8];
+            const rank = 8 - Math.floor(index / 8);
+            return `${file}${rank}`;
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>

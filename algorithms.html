@@ -1,0 +1,41 @@
+<!DOCTYPE html >
+<html>
+	<head> 
+		<title>Algorithmes</title> 
+		<meta http-equiv="Content-Type" content="text/html ; charset=utf-8"/> 
+		<link href="index.css" rel="stylesheet" type="text/css"/> 
+
+	</head>
+	<body>
+		<h1 class='title'><u>Les principaux algorithmes aux échec</u></h1>
+		<h2 class='sstitle'><u>Il existent deux algorithmes, minimax, qui maximize le score pour le joueur maximizant et qui minimize le score pour le joueur minimizant (respectivement blanc et noi dans le contexte des échecs), il y a aussi le negamax, qui fontionne sur le même principe et aussi sur le principe que -max(-A,-B)=min(A,B) et que -min(-A,-B)=max(A,B).</u></h2>
+		<h3 class='sstitle'><u>Le Minimax:</u></h3>
+		<p class='text'>Le <strong>Minimax</strong> Voici l'impplémentation en pseudo code de minimax :</p>
+		<p class='a'>def minimax(alpha, beta, bool=maximizing_player?,position,depth):</p>
+		<p class='b'>  if is terminal node or depth==0:</p>
+		<p class='c'>    return evaluate_position()</p>
+		<p class='b'>  if maximizing_player():</p>
+		<p class='c'>    best_score=-INFINITY</p>
+		<p class='c'>    generatemoves()</p>
+		<p class='c'>      for move in moves:</p>
+		<p class='d'>        do_move</p>
+		<p class='d'>        score=minimax(alpha,beta,False,position,depth-1):</p>
+		<p class='d'>        undo_move</p>
+		<p class='d'>        best_score=max(score,best_score)</p>
+		<p class='d'>        alpha=max(alpha,best_score)</p>
+		<p class='d'>        if alpha>=beta:</p>
+		<p class='e'>          return best_score</p>
+		<p class='c'>    best_score=INFINITY</p>
+		<p class='c'>    generatemoves()</p>
+		<p class='c'>      for move in moves:</p>
+		<p class='d'>        do_move</p>
+		<p class='d'>        score=minimax(alpha,beta,False,position,depth-1):</p>
+		<p class='d'>        undo_move</p>
+		<p class='d'>        best_score=min(score,best_score)</p>
+		<p class='d'>        beta=min(beta,best_score)</p>
+		<p class='d'>        if alpha>=beta:</p>
+		<p class='e'>          return best_score</p>
+		<p class='b'>  return best_score</p>
+		<h3 class='link'><a href="index.html" >retour</a></h3>
+	</body>
+</html>
